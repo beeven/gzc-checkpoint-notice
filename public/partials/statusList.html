@@ -1,0 +1,35 @@
+<div class="container" ng-controller="MainController" infinite-scroll="loadMoreItems()" infinite-scroll-distance="1"
+     infinite-scroll-disabled="busy">
+    <form action="" role="form" class="filter-form" ng-submit="filterSubmit()">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12">
+                <div class="input-group">
+                    <input class="form-control" type="text" ng-model="filterText" placeholder="车牌,手机号..."/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default">
+                            <span class="glyphicon " ng-class="{'glyphicon-search':!filterApplied,'glyphicon-remove':filterApplied}"></span>
+                        </button>
+                </span>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="status-board">
+        <div class="animate-repeat-container">
+            <div class="animate-repeat status-board-item" ng-repeat="item in statusItems | filter:filterText">
+                <div class="status-board-item-header">
+                    <span class="brand">{{item.LPN}}</span>
+                    <span class="date">{{item.Date | date: 'yyyy-MM-dd HH:mm:ss'}}</span>
+                </div>
+                <div class="status-board-item-content">
+                    <span>{{item.Status}}</span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loading" ng-show="busy">
+        <div class="loading-circular"></div>
+    </div>
+
+</div>
