@@ -4,7 +4,7 @@ var express = require("express"),
 
 var dp = new dataProvider();
 
-app.listen(80);
+//app.listen(80);
 
 app.use(express.static(__dirname+"/public"));
 
@@ -45,4 +45,9 @@ app.get("/api/currentList/allFrom/:fromId",function(req,res){
     dp.fetchGreater(index).then(function(data){
         res.json(data);
     })
+});
+
+dp.init().then(function(){
+    app.listen(3001);
+    console.log("server listening on 3001");
 });

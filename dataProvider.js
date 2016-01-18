@@ -2,7 +2,8 @@
  * Created by Beeven on 7/16/2014.
  */
 
-var dataSource = require("./oracleDataSource");
+var DataSource = require("./oracleDataSource"),
+    dataSource = new DataSource();
 
 function dataProvider(pageSize, loopInterval) {
 
@@ -116,6 +117,9 @@ function dataProvider(pageSize, loopInterval) {
     var onerror = function(err){
         console.log(err);
     };
+    this.init = function(){
+        return dataSource.init();
+    }
 }
 
 module.exports = dataProvider;
