@@ -1,0 +1,42 @@
+{
+  "name": "gzc-checkpoint-notice-2017",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && npm run watch",
+    "build": "npm run build-ts && npm run tslint",
+    "serve": "nodemon ./dist/server.js",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve\"",
+    "test": "jest --forceExit",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json --exclude \"web/**/*\"",
+    "debug": "npm run build && npm run watch-debug",
+    "serve-debug": "nodemon --inspect ./dist/server.js",
+    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "csurf": "^1.9.0",
+    "express": "^4.16.2",
+    "morgan": "^1.9.0",
+    "oracledb": "^1.13.1",
+    "rxjs": "^5.5.2"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.1",
+    "@types/csurf": "^1.9.35",
+    "@types/express": "^4.0.39",
+    "@types/morgan": "^1.7.35",
+    "@types/node": "^8.0.53",
+    "@types/oracledb": "^1.11.34",
+    "concurrently": "^3.5.0",
+    "nodemon": "^1.12.1",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.1"
+  }
+}

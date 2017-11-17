@@ -1,0 +1,48 @@
+<!--The content below is only a placeholder and can be replaced.-->
+
+
+<div class="container content-container">
+  <div class="row">
+      <div class="header">
+          <img src="assets/image/12360banner.png" alt="Guangzhou Customs">
+        </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <form class="query-form" (ngSubmit)="onFormSubmit()" #queryForm="ngForm">
+        <div class="form-group">
+          <div class="input-group">
+            <input class="form-control" type="text" name="lpnOrMobile" id="lpnOrMobile" 
+              [(ngModel)]="model.lpnOrMobile" placeholder="车牌 / 手机号码 (ADE011, 13600200500)" #lpnOrMobile="ngModel"
+              required minlength="5" />
+            <span class="input-group-btn">
+              <button class="btn btn-default">
+                <i class="fa fa-search"></i><span class="countdown-timer" *ngIf="loading">{{countdown}}s后自动刷新</span>
+              </button>
+            </span>
+          </div>
+          <div *ngIf="lpnOrMobile.invalid && (lpnOrMobile.dirty || lpnOrMobile.touched)" class="alert alert-danger">
+            <div *ngIf="lpnOrMobile.errors.required">车牌/手机号码必须填写</div>
+            <div *ngIf="lpnOrMobile.errors.minlength">最少长度为5位</div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row list-row">
+    <div class="col-sm-12">
+      <ul class="notice-list">
+        <li *ngFor="let notice of notices" [@noticeAnimationState]="notice.animationState">
+          <div class="notice-header">
+            <div class="lpn">{{notice.lpn}}</div>
+            <div class="date">{{notice.dateModified | date:'yyyy-MM-dd HH:mm:ss'}}</div>
+          </div>
+          <div class="notice-content">
+            <span>{{notice.status}}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
