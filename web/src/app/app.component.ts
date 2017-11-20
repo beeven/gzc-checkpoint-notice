@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
 
   model = new QueryModel();
   notices: Notice[] = [];
-  interval = 5; // 5 seconds 
+  interval = 10; // 10 seconds 
   countdown = 0;
   loading = false;
 
@@ -78,7 +78,8 @@ export class AppComponent implements OnInit {
   }
 
   private pollNotices(lpnOrMobile: string, maxId: number = 0): Observable<Notice[]> {
-    let lastMaxId = maxId;
+    let lastMaxId = Number.isInteger(maxId) ? maxId : 0;
+    //console.log(lastMaxId);
 
     return Observable.timer(0, 1000)
       .map(
@@ -91,7 +92,7 @@ export class AppComponent implements OnInit {
       })
       .filter(c => c == this.interval)
       .switchMap(
-        () => this.http.post<Notice[]>(`/api/GetNewer`, { lpnOrMobile, lastMaxId })
+        () => this.http.post<Notice[]>(`/api/GetNewer`, { lpnOrMobile: lpnOrMobile, maxId: lastMaxId })
       )
       .do(
         (ns) => {

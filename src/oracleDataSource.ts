@@ -2,23 +2,24 @@ import oracledb = require("oracledb");
 import { DataSource, Notice } from "./dataSource";
 import { IConnectionPool } from "oracledb";
 
-oracledb.outFormat = oracledb.OBJECT;
-oracledb.Promise = Promise;
+const config = require("./config.json");
 
+oracledb.outFormat = oracledb.OBJECT;
 
 
 const connectionConfig = {
-    user: "cbes",
-    password: "123456",
-    connectString: "localhost:49161/xe"
+    user: config.database.user,
+    password: config.database.password,
+    connectString: config.database.connectString
 };
 
+/*
 const connnectionConfig = {
     user: "zgdec",
     password: "dbwork",
     connectString: "172.7.1.84/JCDEC"  
 };
-
+*/
 
 export class OracleDataSource implements DataSource {
 
@@ -28,45 +29,49 @@ export class OracleDataSource implements DataSource {
             oracledb.createPool(connectionConfig, (err, pool) => {
                 if (err) { return reject(err); }
                 this.pool = pool;
+                resolve();
             });
         });
     }
     dispose(): Promise<void> {
-        if (this.pool != null) {
+        if (this.pool != undefined) {
             return new Promise((resolve, reject) => {
                 this.pool.close((err) => {
-                    if (err) { return reject(err); }
-                    resolve();
-                })
+                    if (err) {
+                        return reject(err);
+                    }
+                    return resolve();
+                });
             });
         } else {
             return Promise.resolve();
         }
     }
-    getNewNoticeByLPNAndMaxId(lpn: string, maxId: number): Promise<Notice[]> {
+    getNewNoticeByLPNOrMobileAndMaxId(lpn: string, maxId: number): Promise<Notice[]> {
         return new Promise((resolve, reject) => {
             this.pool.getConnection().then(
                 conn => {
-                    return conn.execute(`SELECT "Id","LPN","Status","Date","MOBILE" 
-                    from ( 
-                        SELECT A.*, ROWNUM RN 
-                        FROM ( 
-                            SELECT OID as "Id", 
-                            RECEIVE_DATE - 8/24 as "Date", 
-                            INFORMATION as "Status", 
-                            CAR_NAME as "LPN", 
-                            PHONE as "MOBILE" 
-                            from TRANS_ARRIVE_MESSAGE 
-                            where (CAR_NAME like (:1) or PHONE like (:2)) order by OID desc ) A 
-                        where ROWNUM < (:3) ) 
-                    WHERE RN >= (:4) `,[filterText,filterText,to,from])
-                }
-            ).then(
-                result => {
-                    
+                    let lpnFilter = "%" + lpn + "%";
+                    return conn.execute(
+                        `select OID as "id",
+                            RECEIVE_DATE - 8/24 as "dateModified",
+                            INFORMATION as "status",
+                            CAR_NAME as "lpn"
+                            from TRANS_ARRIVE_MESSAGE
+                            where (CAR_NAME like (:1) or PHONE like (:2))
+                                and OID > (:3)
+                                and RECEIVE_DATE >= (sysdate-5)
+                            order by OID`, [lpnFilter, lpnFilter, maxId]
+                    ).then(
+                        resultSet => {
+                            resolve(resultSet.rows as Notice[]);
+                            return conn.close();
+                        }
+                    );
                 }
             )
-        })
+                .catch((err) => reject(err));
+        });
     }
 
 }

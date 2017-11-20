@@ -12,7 +12,7 @@ export class DummyDataSource implements DataSource {
             }, 1000);
         });
     }
-    getNewNoticeByLPNAndMaxId(lpn: string, maxId: number): Promise<Notice[]> {
+    getNewNoticeByLPNOrMobileAndMaxId(lpn: string, maxId: number): Promise<Notice[]> {
         let notices: Notice[] = [];
         for (let i = 1; i < 2; i++) {
             notices.push({ id: i + maxId, lpn: lpn, dateModified: new Date(), status: "请刷司机纸" });
