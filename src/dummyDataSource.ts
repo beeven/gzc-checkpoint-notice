@@ -5,8 +5,12 @@ export class DummyDataSource implements DataSource {
         return Promise.resolve();
     }
 
-    dispose(): void {
-        return;
+    dispose(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve();
+            }, 1000);
+        });
     }
     getNewNoticeByLPNAndMaxId(lpn: string, maxId: number): Promise<Notice[]> {
         let notices: Notice[] = [];

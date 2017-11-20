@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
         (ns) => {
           ns.forEach(x => {
             this.notices.unshift(x);
-            x.animateState = 'in';
+            x.animationState = 'in';
           });
         }
       );

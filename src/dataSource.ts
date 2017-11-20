@@ -8,6 +8,6 @@ export class Notice {
 
 export interface DataSource {
     initialize(): Promise<void>;
-    dispose(): void;
+    dispose(): Promise<void>;
     getNewNoticeByLPNAndMaxId(lpn: string, maxId: number): Promise<Notice[]>;
 }

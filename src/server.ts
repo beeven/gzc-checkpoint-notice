@@ -1,8 +1,8 @@
-import * as express from "express";
-import * as bodyParser from "body-parser";
-import * as cookieParser from "cookie-parser";
-import * as logger from "morgan";
-import * as csurf from "csurf";
+import express = require("express");
+import bodyParser = require("body-parser");
+import cookieParser = require("cookie-parser");
+import logger = require("morgan");
+import csurf = require("csurf");
 
 import { DummyDataSource } from "./dummyDataSource";
 const dataSource = new DummyDataSource();
